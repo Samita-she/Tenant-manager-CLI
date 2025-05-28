@@ -17,7 +17,8 @@ def show_menu():
     print("2. Record Rent Payment")
     print("3. View Rent Status")
     print("4. Mark Tenant as Moved Out")
-    print("5. Exit")
+    print("5. Generate Tenant Report")
+    print("6. Exit")
 
 
 
@@ -83,6 +84,45 @@ def view_rent_status():
         print(f"Total Paid: {total_paid}")
         print(f"Status: {status}")
 
+
+def generate_tenant_report():
+    today = datetime.today().strftime("%Y-%m-%d")
+
+    print("\n=== 📊  Tenant Report ===")
+
+    for tenant in data["tenants"]:
+        tid = tenant["tenant_id"]
+        name = tenant["name"]
+        unit = tenant["unit_number"]
+        move_in = tenant["move_in_date"]
+        move_out = tenant.get("move_out_date")
+        end_date = move_out if move_out else today
+
+        # Payment calculations
+        months_occupied = calculate_months_between(move_in, end_date)
+        total_due = months_occupied * MONTHLY_RENT
+        total_paid = sum(p["amount"] for p in data["payments"] if p["tenant_id"] == tid)
+        balance = total_due - total_paid
+
+        # Payment status
+        if total_paid >= total_due:
+            payment_status = "✅ Paid"
+        elif total_paid > 0:
+            payment_status = "⚠️ Partial"
+        else:
+            payment_status = "❌ Unpaid"
+
+        # Occupancy
+        occupancy = "🏚️ Vacated" if move_out else "🏠 Occupied"
+
+        print(f"\nTenant: {name} (Unit {unit})")
+        print(f"Move-in: {move_in} | Move-out: {move_out if move_out else 'Currently Occupied'}")
+        print(f"Months Occupied: {months_occupied}")
+        print(f"Total Due: {total_due} | Total Paid: {total_paid} | Balance: {balance}")
+        print(f"Payment Status: {payment_status}")
+        print(f"Occupancy: {occupancy}")
+        print("-" * 60)
+
 def mark_moved_out():
     name = input("Enter tenant name to mark as moved out: ")
     tenant = next((t for t in data["tenants"] if t["name"].lower() == name.lower()), None)
@@ -104,6 +144,7 @@ def mark_moved_out():
     print(f"✅ {tenant['name']} marked as moved out on {date}.")
 
 
+
 def main_menu():
     while True:
         show_menu()
@@ -117,9 +158,10 @@ def main_menu():
         elif choice == "4":
             mark_moved_out()
         elif choice == "5":
+            generate_tenant_report()
+        elif choice == "6":
             print("Exiting...")
             break
-
         else:
             print("Invalid choice.")
 
