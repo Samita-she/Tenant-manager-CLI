@@ -20,7 +20,8 @@ def show_menu():
     print("4. Mark Tenant as Moved Out")
     print("5. Generate Tenant Report")
     print("6. Export Tenant Report to CSV")
-    print("7. Exit")
+    print("7. Search Tenant by Name or Unit")
+    print("8. Exit")
 
 
 
@@ -85,6 +86,24 @@ def view_rent_status():
         print(f"Total Due: {expected_rent}")
         print(f"Total Paid: {total_paid}")
         print(f"Status: {status}")
+
+def search_tenant():
+    query = input("Enter tenant name or unit number to search: ").lower()
+    found = False
+
+    for tenant in data["tenants"]:
+        if query in tenant["name"].lower() or query in tenant["unit_number"].lower():
+            found = True
+            print("\n--- Tenant Found ---")
+            print(f"Name: {tenant['name']}")
+            print(f"Unit: {tenant['unit_number']}")
+            print(f"Move-in Date: {tenant['move_in_date']}")
+            print(f"Move-out Date: {tenant.get('move_out_date', 'Still Occupied')}")
+            break
+
+    if not found:
+        print("❌ No tenant found with that name or unit.")
+       
 
 
 def generate_tenant_report():
@@ -180,6 +199,8 @@ def export_report_to_csv(filename="tenant_report.csv"):
 
 
 
+
+
 def main_menu():
     while True:
         show_menu()
@@ -197,6 +218,8 @@ def main_menu():
         elif choice == "6":
             export_report_to_csv()
         elif choice == "7":
+            search_tenant()
+        elif choice == "8":
             print("Exiting...")
             break
         else:
