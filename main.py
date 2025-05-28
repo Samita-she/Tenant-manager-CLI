@@ -1,6 +1,7 @@
 from data_manager import load_data, save_data
 from models import Tenant, Payment
 from datetime import datetime
+import csv
 import uuid
 
 MONTHLY_RENT = 10500
@@ -18,7 +19,8 @@ def show_menu():
     print("3. View Rent Status")
     print("4. Mark Tenant as Moved Out")
     print("5. Generate Tenant Report")
-    print("6. Exit")
+    print("6. Export Tenant Report to CSV")
+    print("7. Exit")
 
 
 
@@ -143,6 +145,39 @@ def mark_moved_out():
     save_data(data["tenants"], "tenants.json")
     print(f"✅ {tenant['name']} marked as moved out on {date}.")
 
+def export_report_to_csv(filename="tenant_report.csv"):
+    today = datetime.today().strftime("%Y-%m-%d")
+
+    with open(filename, mode="w", newline="") as file:
+        writer = csv.writer(file)
+        writer.writerow(["Tenant Name", "Unit", "Move-in", "Move-out", "Months Occupied", "Total Due", "Total Paid", "Balance", "Payment Status", "Occupancy"])
+
+        for tenant in data["tenants"]:
+            tid = tenant["tenant_id"]
+            name = tenant["name"]
+            unit = tenant["unit_number"]
+            move_in = tenant["move_in_date"]
+            move_out = tenant.get("move_out_date")
+            end_date = move_out if move_out else today
+
+            months_occupied = calculate_months_between(move_in, end_date)
+            total_due = months_occupied * MONTHLY_RENT
+            total_paid = sum(p["amount"] for p in data["payments"] if p["tenant_id"] == tid)
+            balance = total_due - total_paid
+
+            if total_paid >= total_due:
+                payment_status = "Paid"
+            elif total_paid > 0:
+                payment_status = "Partial"
+            else:
+                payment_status = "Unpaid"
+
+            occupancy = "Vacated" if move_out else "Occupied"
+
+            writer.writerow([name, unit, move_in, move_out or "Current", months_occupied, total_due, total_paid, balance, payment_status, occupancy])
+
+    print(f"✅ Report exported to {filename}") 
+
 
 
 def main_menu():
@@ -160,6 +195,8 @@ def main_menu():
         elif choice == "5":
             generate_tenant_report()
         elif choice == "6":
+            export_report_to_csv()
+        elif choice == "7":
             print("Exiting...")
             break
         else:
