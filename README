@@ -1,0 +1,112 @@
+# Tenant Manager CLI
+
+A simple offline command-line application to help landlords and caretakers manage tenants, track rent payments, and generate rental reports.
+
+---
+
+## 🚩 Problem Statement
+
+Landlords or caretakers managing multiple rental units often struggle with:
+- Tracking tenant move-ins and move-outs
+- Recording full, partial, or missed rent payments
+- Determining who owes rent (arrears)
+- Monitoring occupancy status
+- Managing records without depending on cloud services
+
+Manual systems like notebooks or spreadsheets are inefficient and error-prone. This tool aims to solve that.
+
+---
+
+## ✅ Solution
+
+**Tenant Manager CLI** is a privacy-first, offline Python tool that allows landlords to:
+- Add and remove tenants
+- Record and track rent payments
+- View current rent statuses
+- Generate detailed and simple reports
+- Search tenants by name or unit
+- Export data to JSON and CSV files
+
+---
+
+## ✨ Features
+
+- Add new tenants with unit number and move-in date
+- Record rent payments (amount and date)
+- Mark tenants as moved out (with move-out date)
+- View rent payment status and arrears
+- Generate tenant reports (paid, partial, unpaid)
+- Generate simple reports (occupancy, payment)
+- Search tenant by name or unit number
+- Save and load data locally from `.json` files
+- Export reports to `.csv` format (coming soon)
+
+---
+
+## 🛠️ Tech Stack
+
+- Python 3.x
+- Built-in modules: `uuid`, `datetime`, `json`, `csv`
+- No external dependencies or cloud services
+
+---
+
+## 🧰 Project Structure
+
+```bash
+Tenant-manager-CLI/
+│
+├── main.py                # Main CLI application
+├── models.py              # Tenant & Payment classes
+├── data_manager.py        # Functions to load/save data
+├── tenants.json           # Tenant data (auto-generated)
+├── payments.json          # Payment data (auto-generated)
+├── reports/               # (Optional) Folder for exported CSVs
+├── README.md              # You're here!
+
+📦 Installation
+Clone the repository:
+git clone https://github.com/Samita-she/tenant-manager-cli.git
+cd tenant-manager-cli
+
+Run the application:
+python main.py
+
+📌 Usage
+Once the app runs, you’ll see a menu:
+Tenant Manager CLI
+1. Add Tenant
+2. Record Rent Payment
+3. View Rent Status
+4. Mark Tenant as Moved Out
+5. Generate Tenant Report
+6. Export Tenant Report to CSV
+7. Search Tenant by Name or Unit
+8. Exit
+Follow the prompts to manage your tenant data.
+
+🔐 Data Privacy
+All data is stored locally in .json files.
+
+No internet connection or third-party services required.
+
+You own your data.
+
+🚧 Future Improvements
+CSV export of reports
+
+Monthly rent reminders
+
+GUI version (Tkinter or web-based)
+
+Unit-level reporting
+
+🤝 Contributing
+Pull requests are welcome. For major changes, please open an issue first to discuss your idea.
+
+📄 License
+This project is licensed under the MIT License.
+
+👩‍💻 Author
+Samita She
+GitHub Profile
