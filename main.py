@@ -16,7 +16,9 @@ def show_menu():
     print("1. Add Tenant")
     print("2. Record Rent Payment")
     print("3. View Rent Status")
-    print("4. Exit")
+    print("4. Mark Tenant as Moved Out")
+    print("5. Exit")
+
 
 
 def add_tenant():
@@ -81,6 +83,27 @@ def view_rent_status():
         print(f"Total Paid: {total_paid}")
         print(f"Status: {status}")
 
+def mark_moved_out():
+    name = input("Enter tenant name to mark as moved out: ")
+    tenant = next((t for t in data["tenants"] if t["name"].lower() == name.lower()), None)
+
+    if not tenant:
+        print("❌ Tenant not found.")
+        return
+
+    if tenant.get("move_out_date"):
+        print("⚠️ Tenant already marked as moved out.")
+        return
+
+    date = input("Enter move-out date (YYYY-MM-DD), or press Enter for today: ")
+    if not date:
+        date = datetime.today().strftime("%Y-%m-%d")
+
+    tenant["move_out_date"] = date
+    save_data(data["tenants"], "tenants.json")
+    print(f"✅ {tenant['name']} marked as moved out on {date}.")
+
+
 def main_menu():
     while True:
         show_menu()
@@ -92,8 +115,11 @@ def main_menu():
         elif choice == "3":
             view_rent_status()
         elif choice == "4":
+            mark_moved_out()
+        elif choice == "5":
             print("Exiting...")
             break
+
         else:
             print("Invalid choice.")
 
